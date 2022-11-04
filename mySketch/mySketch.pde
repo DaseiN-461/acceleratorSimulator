@@ -2,9 +2,14 @@ import processing.sound.*;
 
 SoundFile file;
 
+
+
 int vel = 0;
 int ace = 0;
-int step = 1;
+int step_acelerator = 1;
+int step_brake = 10;
+int step_vel_friction = 2;
+int step_ace_friction = 2;
 
 
 int framerate = 5;
@@ -49,6 +54,17 @@ void draw_pedals(){
    rect(x_fre-(w_ace/2),y_fre-(h_ace/2),w_ace,h_ace);
 }
 
+void deceleration(){
+  vel -= step_vel_friction;
+     if(ace>0){
+       if(ace>=step_ace_friction){
+         ace -= step_ace_friction;       
+       }else{
+         ace -= 1;
+       }
+     }
+}
+
 int aceleradorHandler(int time){
    draw_pedals();
    
@@ -56,7 +72,7 @@ int aceleradorHandler(int time){
       mouseX<x_ace+(w_ace/2) &&
       mouseY>y_ace-(h_ace/2) &&
       mouseY<y_ace+(h_ace/2)){
-     ace += step;
+     ace += step_acelerator;
      //warning
      if(time>=timeWarning){
        fill(255,0,0);
@@ -69,7 +85,10 @@ int aceleradorHandler(int time){
             mouseY<y_fre+(h_ace/2)){
        fill(255,0,0);
        rect(x_fre-(w_ace/2),y_fre-(h_ace/2),w_ace,h_ace);
-       ace -= step;
+       deceleration();
+       vel -= step_brake;
+   }else{
+     deceleration();
    }
    return ace;
      
@@ -87,7 +106,8 @@ void draw(){
    
    if(vel <= 0){
      ace = 0;
-     counterLoop = 0;
+     vel = 0;
+     counterLoop = 0;    
    }
    counterLoop += 1;
 }
