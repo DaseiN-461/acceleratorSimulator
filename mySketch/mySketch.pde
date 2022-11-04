@@ -29,54 +29,65 @@ void setup(){
 }
 
 void show_vel(){
+   fill(0,0,255);
    textSize(20);
    text("velocity",100,50);
    textSize(30);
    text(vel, 100, 80);
+   textSize(20);
+   text("acceleration",100,100);
+   textSize(30);
+   text(ace, 100,130);
 }
 
-void aceleradorHandler(int time){
-   //draw acelerator
+void draw_pedals(){
+  //draw acelerator
    fill(0,100,0);
    rect(x_ace-(w_ace/2),y_ace-(h_ace/2),w_ace,h_ace);
    //draw brake
    fill(0,100,0);
    rect(x_fre-(w_ace/2),y_fre-(h_ace/2),w_ace,h_ace);
+}
+
+int aceleradorHandler(int time){
+   draw_pedals();
    
    if(mouseX>x_ace-(w_ace/2) && 
       mouseX<x_ace+(w_ace/2) &&
       mouseY>y_ace-(h_ace/2) &&
       mouseY<y_ace+(h_ace/2)){
      ace += step;
-     vel += ace;
-     
      //warning
      if(time>=timeWarning){
        fill(255,0,0);
        rect(x_ace-(w_ace/2),y_ace-(h_ace/2),w_ace,h_ace);
-     }  
+     
+     }
    }else if(mouseX>x_fre-(w_ace/2) && 
             mouseX<x_fre+(w_ace/2) &&
             mouseY>y_fre-(h_ace/2) &&
             mouseY<y_fre+(h_ace/2)){
-     fill(255,0,0);
-     rect(x_fre-(w_ace/2),y_fre-(h_ace/2),w_ace,h_ace);
-     if(vel>0){
-       
-     }
+       fill(255,0,0);
+       rect(x_fre-(w_ace/2),y_fre-(h_ace/2),w_ace,h_ace);
+       ace -= step;
    }
-   
+   return ace;
      
 }
 
 void draw(){
    time = counterLoop/framerate;
    
-   background(0);
+   background(255);
    show_vel();
    
    
-   aceleradorHandler(time);
+   ace = aceleradorHandler(time);
+   vel += ace;
    
+   if(vel <= 0){
+     ace = 0;
+     counterLoop = 0;
+   }
    counterLoop += 1;
 }
