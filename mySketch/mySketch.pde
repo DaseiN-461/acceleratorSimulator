@@ -55,14 +55,15 @@ void aceleradorHandler(int time){
        fill(255,0,0);
        rect(x_ace-(w_ace/2),y_ace-(h_ace/2),w_ace,h_ace);
      }  
-   }
-   if(mouseX>x_fre-(w_ace/2) && 
-      mouseX<x_fre+(w_ace/2) &&
-      mouseY>y_fre-(h_ace/2) &&
-      mouseY<y_fre+(h_ace/2)){
+   }else if(mouseX>x_fre-(w_ace/2) && 
+            mouseX<x_fre+(w_ace/2) &&
+            mouseY>y_fre-(h_ace/2) &&
+            mouseY<y_fre+(h_ace/2)){
      fill(255,0,0);
      rect(x_fre-(w_ace/2),y_fre-(h_ace/2),w_ace,h_ace);
-     
+     if(vel>0){
+       
+     }
    }
    
      
