@@ -7,8 +7,8 @@ SoundFile file;
 int vel = 0;
 int ace = 0;
 int step_acelerator = 1;
-int step_brake = 10;
-int step_vel_friction = 2;
+int step_brake = 20;
+int step_vel_friction = 20;
 int step_ace_friction = 2;
 
 
@@ -26,24 +26,15 @@ int y_fre = 350;
 int w_ace = 50;
 int h_ace = 100;
 
+boolean flag = false;
 
 void setup(){
   size(500,500);
-  file = new SoundFile(this, "sample.mp3");
+  file = new SoundFile(this, "sample.mpeg");
   frameRate(framerate);
 }
 
-void show_vel(){
-   fill(0,0,255);
-   textSize(20);
-   text("velocity",100,50);
-   textSize(30);
-   text(vel, 100, 80);
-   textSize(20);
-   text("acceleration",100,100);
-   textSize(30);
-   text(ace, 100,130);
-}
+
 
 void draw_pedals(){
   //draw acelerator
@@ -73,6 +64,7 @@ int aceleradorHandler(int time){
       mouseY>y_ace-(h_ace/2) &&
       mouseY<y_ace+(h_ace/2)){
      ace += step_acelerator;
+     
      //warning
      if(time>=timeWarning){
        fill(255,0,0);
@@ -94,15 +86,46 @@ int aceleradorHandler(int time){
      
 }
 
+void show_vel(){
+   fill(0,0,255);
+   
+   
+}
+
+void show_charts(int vel, int ace){
+
+    fill(0);
+    textSize(20);
+    text("velocity",10,50);
+    textSize(30);
+    text(vel, 10, 80);
+    rect(100,65,vel,30);
+    
+    textSize(20);
+    text("acceleration",10,120);
+    textSize(30);
+    text(ace, 10,150);
+    rect(100,145,ace,30);
+
+    
+    fill(255);
+  
+}
+
 void draw(){
    time = counterLoop/framerate;
    
    background(255);
    show_vel();
-   
+   show_charts(vel,ace);
    
    ace = aceleradorHandler(time);
    vel += ace;
+   
+   if(flag == false && vel > 350){
+     flag = true;
+     if (!file.isPlaying()) {file.play();};
+   }
    
    if(vel <= 0){
      ace = 0;
