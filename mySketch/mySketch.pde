@@ -29,8 +29,8 @@ int h_ace = 100;
 boolean flag = false;
 
 void setup(){
-  size(500,500);
-  file = new SoundFile(this, "sample.mpeg");
+  size(1000,1000);
+  file = new SoundFile(this, "sample (1).mp3");
   frameRate(framerate);
 }
 
@@ -55,8 +55,11 @@ void deceleration(){
        }
      }
 }
+int counter_ace = 0;
+int counter_timeout=0;
+int timeout = 3;
 
-int aceleradorHandler(int time){
+int aceleradorHandler(){
    draw_pedals();
    
    if(mouseX>x_ace-(w_ace/2) && 
@@ -64,13 +67,18 @@ int aceleradorHandler(int time){
       mouseY>y_ace-(h_ace/2) &&
       mouseY<y_ace+(h_ace/2)){
      ace += step_acelerator;
+     counter_ace++;
      
      //warning
-     if(time>=timeWarning){
+     if(counter_ace/framerate >= timeWarning){
+       flag = true;
        fill(255,0,0);
        rect(x_ace-(w_ace/2),y_ace-(h_ace/2),w_ace,h_ace);
-     
+       
+       if (!file.isPlaying()) {file.play();};
+       
      }
+     
    }else if(mouseX>x_fre-(w_ace/2) && 
             mouseX<x_fre+(w_ace/2) &&
             mouseY>y_fre-(h_ace/2) &&
@@ -81,6 +89,16 @@ int aceleradorHandler(int time){
        vel -= step_brake;
    }else{
      deceleration();
+     
+     if(flag){
+       counter_timeout++;
+       if(counter_timeout/framerate > timeout){
+         flag = false;
+         counter_timeout = 0;
+         counter_ace = 0;
+         fill(0,255,0);
+       }
+     }
    }
    return ace;
      
@@ -88,6 +106,8 @@ int aceleradorHandler(int time){
 
 void show_vel(){
    fill(0,0,255);
+   
+   
    
    
 }
@@ -119,13 +139,12 @@ void draw(){
    show_vel();
    show_charts(vel,ace);
    
-   ace = aceleradorHandler(time);
+   ace = aceleradorHandler();
    vel += ace;
    
-   if(flag == false && vel > 350){
-     flag = true;
-     if (!file.isPlaying()) {file.play();};
-   }
+   
+     //if (!file.isPlaying()) {file.play();};
+   
    
    if(vel <= 0){
      ace = 0;
